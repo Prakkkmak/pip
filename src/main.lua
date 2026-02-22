@@ -16,7 +16,7 @@ function _init()
 end
 
 function _update()
-	player.move()
+	player.update()
 	t += 1
 end
 

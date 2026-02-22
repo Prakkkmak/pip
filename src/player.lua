@@ -1,12 +1,19 @@
 -- Constants
-gravity = 0
+gravity = 1
 tsize = 8
-wspeed = 1
-jspeed = 2
+accel = 1
+jforce = 2
+fric = 1
+max_spd = 4
 -- Sprites
 idle = 49
 
 player = {
+	x = 0,
+	y = 0
+}
+
+speed = {
 	x = 0,
 	y = 0
 }
@@ -42,16 +49,36 @@ function player.move()
 	local tx = player.x
 	local ty = player.y
 
-	if (btn(0)) tx -= wspeed
-	if (btn(1)) tx += wspeed
+	if (btn(0)) speed.x -= accel
+	if (btn(1)) speed.x += accel
+	tx += speed.x
 	tx = player.collide(tx, player.x, player.y, 0)
 
-	if (btn(2)) ty -= jspeed
-	if (btn(3)) ty += wspeed
+	if (btn(2)) speed.y -= jforce
+	ty += speed.y
 	ty = player.collide(ty, player.y, tx, 1)
 
 	player.x = tx
 	player.y = ty
+end
+
+function player.apply_nat_forces()
+	-- Gravity
+	speed.y += gravity
+
+	-- Friction
+	if speed.x > 0 then
+		speed.x = min(speed.x - fric, 0)
+	elseif speed.x < 0 then
+		speed.x = max(speed.x + fric, 0)
+	end
+end
+
+function player.update()
+	player.move()
+	player.apply_nat_forces()
+	speed.x = mid(-max_spd, speed.x, max_spd)
+	speed.y = mid(-max_spd, speed.y, max_spd / 2)
 end
 
 function player.draw()
