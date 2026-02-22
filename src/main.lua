@@ -4,6 +4,9 @@ spawn = {
 }
 
 function _init()
+	for i = 0, 64 do
+		chunk.init(i)
+	end
 	player.set_pos(spawn.x, spawn.y)
 	t = 0
 	palt(0, false)
@@ -20,7 +23,7 @@ function _draw()
 	local cam_y = min(0, player.y)
 	camera(0, cam_y - 64)
 	for i = 0, 64 do
-		chunk.gen(i)
+		chunk.draw(i)
 	end
 	player.draw()
 end

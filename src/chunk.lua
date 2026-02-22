@@ -4,15 +4,19 @@ chpx = chtls * 8
 chunk = {}
 chunk.current = 0
 
-function chunk.gen(index)
+function chunk.init(index)
+	local chid = 0
+	chunk[index] = chid
+end
+
+function chunk.draw(index)
 	local col = index % 2
 	local row = flr(index / 2)
 
 	local sx = col * chpx
 	local sy = -row * chpx
 
-	local chid = 0
-
+	local chid = chunk[index]
 	local bank_col = chid % 2
 	local bank_row = chid / 2
 
@@ -20,8 +24,6 @@ function chunk.gen(index)
 	local ty = bank_row * chtls
 
 	map(tx, ty, sx, sy, chtls, chtls)
-
-	chunk[index] = chid
 end
 
 function chunk.solid(tx, ty)
