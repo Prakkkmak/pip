@@ -35,7 +35,7 @@ function player.move()
 
 	if target_x > player.x and (chunk.solid(tile_x + 1, tile_y) or chunk.solid(tile_x + 1, tile_y + 1)) then
 		target_x = tile_x * 8
-	elseif target_x <= player.x and (chunk.solid(tile_x, tile_y) or chunk.solid(tile_x, tile_y + 1)) then
+	elseif target_x < player.x and (chunk.solid(tile_x, tile_y) or chunk.solid(tile_x, tile_y + 1)) then
 		target_x = (tile_x + 1) * 8
 	end
 
