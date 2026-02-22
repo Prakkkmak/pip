@@ -4,8 +4,7 @@ chpx = chtls * 8
 chunk = {}
 chunk.current = 0
 
-function chunk.init(index)
-	local chid = 0
+function chunk.init(index, chid)
 	chunk[index] = chid
 end
 
@@ -17,8 +16,11 @@ function chunk.draw(index)
 	local sy = -row * chpx
 
 	local chid = chunk[index]
-	local bank_col = chid % 2
-	local bank_row = chid / 2
+
+	local bank_size_col = 128 / chtls
+
+	local bank_col = chid % bank_size_col
+	local bank_row = flr(chid / bank_size_col)
 
 	local tx = bank_col * chtls
 	local ty = bank_row * chtls

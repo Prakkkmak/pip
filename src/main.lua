@@ -4,8 +4,10 @@ spawn = {
 }
 
 function _init()
-	for i = 0, 64 do
-		chunk.init(i)
+	chunk.init(0, 0)
+	chunk.init(1, 1)
+	for i = 2, 64 do
+		chunk.init(i, 2)
 	end
 	player.set_pos(spawn.x, spawn.y)
 	t = 0
