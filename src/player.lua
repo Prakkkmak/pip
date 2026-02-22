@@ -20,27 +20,38 @@ function player.set_pos(x, y)
 	player.y = y
 end
 
-function player.move()
-	local target_x = player.x
-	local target_y = player.y
+function player.collide(target, current, cross, axis)
+	if (target == current) return target
+	local target_tile = flr(target / tsize)
+	local cross_tile = flr(cross / tsize)
+	local overlap = cross % 8 != 0
+	local edge = target > current and target_tile + 1 or target_tile
 
-	if (btn(0)) target_x = player.x - wspeed
-	if (btn(1)) target_x = player.x + wspeed
-	if (btn(2)) target_y = player.y - jspeed
-	if (btn(3)) target_y = player.y + jspeed
-	--target_y = player.calc_grav()
-	--Collision
-	local tile_x = flr(target_x / tsize)
-	local tile_y = flr(target_y / tsize)
-
-	if target_x > player.x and (chunk.solid(tile_x + 1, tile_y) or chunk.solid(tile_x + 1, tile_y + 1)) then
-		target_x = tile_x * 8
-	elseif target_x < player.x and (chunk.solid(tile_x, tile_y) or chunk.solid(tile_x, tile_y + 1)) then
-		target_x = (tile_x + 1) * 8
+	local hit
+	if axis == 0 then
+		hit = chunk.solid(edge, cross_tile) or (overlap and chunk.solid(edge, cross_tile + 1))
+	else
+		hit = chunk.solid(cross_tile, edge) or (overlap and chunk.solid(cross_tile + 1, edge))
 	end
 
-	player.x = target_x
-	player.y = target_y
+	if (hit) return target > current and target_tile * 8 or (target_tile + 1) * 8
+	return target
+end
+
+function player.move()
+	local tx = player.x
+	local ty = player.y
+
+	if (btn(0)) tx -= wspeed
+	if (btn(1)) tx += wspeed
+	tx = player.collide(tx, player.x, player.y, 0)
+
+	if (btn(2)) ty -= jspeed
+	if (btn(3)) ty += wspeed
+	ty = player.collide(ty, player.y, tx, 1)
+
+	player.x = tx
+	player.y = ty
 end
 
 function player.draw()
